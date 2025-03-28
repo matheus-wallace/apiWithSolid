@@ -29,8 +29,6 @@ describe('Authenticate services', () => {
   })
 
   it('should not be able to authenticate with wrong email', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const sut = new AuthenticateService(usersRepository)
     await expect(() =>
       sut.execute({
         email: 'testing@gmail.com',
@@ -40,9 +38,6 @@ describe('Authenticate services', () => {
   })
 
   it('should not be able to authenticate with wrong password', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const sut = new AuthenticateService(usersRepository)
-
     await usersRepository.create({
       name: 'matheus',
       email: 'teste@gmail.com',

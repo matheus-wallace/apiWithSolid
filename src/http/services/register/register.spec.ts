@@ -26,7 +26,6 @@ describe('Register services', () => {
 
   it('should not be able to register email twice', async () => {
     const email = 'teste@gmail.com'
-
     await sut.execute({
       name: 'Matheus Pereira',
       email,
@@ -43,7 +42,6 @@ describe('Register services', () => {
   })
   it('should be to register', async () => {
     const email = 'teste@gmail.com'
-
     const { user } = await sut.execute({
       name: 'Matheus Pereira',
       email,
