@@ -25,9 +25,9 @@ export class AuthenticateService {
       throw new InvalidCredentialsError()
     }
 
-    const doesPasswordMathes = await compare(password, user.password_hash)
+    const doesPasswordMatches = await compare(password, user.password_hash)
 
-    if (!doesPasswordMathes) {
+    if (!doesPasswordMatches) {
       throw new InvalidCredentialsError()
     }
 
