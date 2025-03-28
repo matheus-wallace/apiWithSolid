@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { RegisterService } from './registerService'
 import { compare } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
-import { UserAlreadyExistsError } from './erros/user-already-exists-error'
+import { UserAlreadyExistsError } from '../erros/user-already-exists-error'
 
-describe('Register routes', () => {
+describe('Register services', () => {
   it('should hash user password upon registration', async () => {
     const usersRepository = new InMemoryUsersRepository()
     const registerService = new RegisterService(usersRepository)
