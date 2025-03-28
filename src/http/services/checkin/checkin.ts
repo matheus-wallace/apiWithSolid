@@ -1,9 +1,13 @@
 import { CheckIn } from '@prisma/client'
 import { CheckinsRepository } from '@/repositories/prisma/check-ins-repository'
+import { GymRepository } from '@/repositories/prisma/gym-repository'
+import { ResourceNotFoundError } from '../erros/resource-not-found'
 
 interface CehckInServiceRequest {
   userId: string
   gymId: string
+  userLatitude: number
+  userLogitude: number
 }
 
 interface CehckInServiceResponse {
@@ -11,12 +15,21 @@ interface CehckInServiceResponse {
 }
 
 export class CehckInService {
-  constructor(private usersRepository: CheckinsRepository) {}
+  constructor(
+    private usersRepository: CheckinsRepository,
+    private gymsRepository: GymRepository,
+  ) {}
 
   async execute({
     userId,
     gymId,
   }: CehckInServiceRequest): Promise<CehckInServiceResponse> {
+    const gym = await this.gymsRepository.findById(gymId)
+
+    if (!gym) {
+      throw new ResourceNotFoundError()
+    }
+
     const checkOnSameDate = await this.usersRepository.findByUserIdOnDate(
       userId,
       new Date(),
