@@ -1,15 +1,20 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { RegisterService } from './registerService'
 import { compare } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { UserAlreadyExistsError } from '../erros/user-already-exists-error'
 
-describe('Register services', () => {
-  it('should hash user password upon registration', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterService(usersRepository)
+let usersRepository: InMemoryUsersRepository
+let sut: RegisterService
 
-    const { user } = await registerService.execute({
+describe('Register services', () => {
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRepository()
+    sut = new RegisterService(usersRepository)
+  })
+
+  it('should hash user password upon registration', async () => {
+    const { user } = await sut.execute({
       name: 'Matheus Pereira',
       email: 'teste1@gmail.com',
       password: 'teste',
@@ -20,18 +25,16 @@ describe('Register services', () => {
   })
 
   it('should not be able to register email twice', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterService(usersRepository)
     const email = 'teste@gmail.com'
 
-    await registerService.execute({
+    await sut.execute({
       name: 'Matheus Pereira',
       email,
       password: 'teste',
     })
 
     await expect(() =>
-      registerService.execute({
+      sut.execute({
         name: 'Matheus Pereira',
         email,
         password: 'teste',
@@ -39,11 +42,9 @@ describe('Register services', () => {
     ).rejects.toBeInstanceOf(UserAlreadyExistsError)
   })
   it('should be to register', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterService(usersRepository)
     const email = 'teste@gmail.com'
 
-    const { user } = await registerService.execute({
+    const { user } = await sut.execute({
       name: 'Matheus Pereira',
       email,
       password: 'teste',
