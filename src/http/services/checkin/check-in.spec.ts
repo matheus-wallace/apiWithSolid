@@ -3,23 +3,26 @@ import { InMemoryCheckinRepository } from '@/repositories/in-memory/in-memory-ch
 import { CehckInService } from './checkin'
 import { InMemoryGymRepository } from '@/repositories/in-memory/in-memory-gyms-repository'
 import { Decimal } from '@prisma/client/runtime/library'
+import { MaxDistanceError } from '../erros/max-distances-error'
+import { MaxNumberOfCheckinsError } from '../erros/max-number-of-checkins-error'
 
 let checkinRepository: InMemoryCheckinRepository
 let sut: CehckInService
 let gymRepository: InMemoryGymRepository
 describe('Checkin services', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     checkinRepository = new InMemoryCheckinRepository()
     gymRepository = new InMemoryGymRepository()
     sut = new CehckInService(checkinRepository, gymRepository)
     vi.useFakeTimers()
-    gymRepository.items.push({
+
+    await gymRepository.create({
       id: 'gym-01',
       title: 'Gym 01',
       description: 'Gym 01',
       phone: '123456789',
-      latitude: new Decimal(-23.5505),
-      longitude: new Decimal(-46.6333),
+      latitude: -23.5505,
+      longitude: -46.6333,
     })
   })
 
@@ -57,8 +60,9 @@ describe('Checkin services', () => {
         userLatitude: -23.5505,
         userLogitude: -46.6333,
       }),
-    ).rejects.toBeInstanceOf(Error)
+    ).rejects.toBeInstanceOf(MaxNumberOfCheckinsError)
   })
+
   it('should note be able to check in twice but in diferrent days', async () => {
     vi.setSystemTime(new Date(2022, 0, 20, 8, 0, 0))
 
@@ -79,5 +83,25 @@ describe('Checkin services', () => {
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
+  })
+
+  it('Should not be able to check in on distant gym', async () => {
+    gymRepository.items.push({
+      id: 'gym-02',
+      title: 'Gym 02',
+      description: 'Gym 02',
+      phone: '123456789',
+      latitude: new Decimal(-22.9509859),
+      longitude: new Decimal(-46.67708115),
+    })
+
+    await expect(() =>
+      sut.execute({
+        gymId: 'gym-02',
+        userId: 'useid-01',
+        userLatitude: -23.5505,
+        userLogitude: -46.6333,
+      }),
+    ).rejects.toBeInstanceOf(MaxDistanceError)
   })
 })
