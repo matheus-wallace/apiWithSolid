@@ -10,7 +10,7 @@ interface CheckInServiceRequest {
   userId: string
   gymId: string
   userLatitude: number
-  userLogitude: number
+  userLongitude: number
 }
 
 interface CheckInServiceResponse {
@@ -27,7 +27,7 @@ export class CheckInService {
     userId,
     gymId,
     userLatitude,
-    userLogitude,
+    userLongitude,
   }: CheckInServiceRequest): Promise<CheckInServiceResponse> {
     const gym = await this.gymsRepository.findById(gymId)
 
@@ -36,7 +36,7 @@ export class CheckInService {
     }
 
     const distance = getDistanceBetweenCoordinates(
-      { latitude: userLatitude, longitude: userLogitude },
+      { latitude: userLatitude, longitude: userLongitude },
       {
         latitude: gym.latitude.toNumber(),
         longitude: gym.longitude.toNumber(),

@@ -37,7 +37,7 @@ describe('Checkin services', () => {
       gymId: 'gym-01',
       userId: 'useid-01',
       userLatitude: -23.5505,
-      userLogitude: -46.6333,
+      userLongitude: -46.6333,
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
@@ -50,7 +50,7 @@ describe('Checkin services', () => {
       gymId: 'gym-01',
       userId: 'useid-01',
       userLatitude: -23.5505,
-      userLogitude: -46.6333,
+      userLongitude: -46.6333,
     })
 
     await expect(() =>
@@ -58,7 +58,7 @@ describe('Checkin services', () => {
         gymId: 'gym-01',
         userId: 'useid-01',
         userLatitude: -23.5505,
-        userLogitude: -46.6333,
+        userLongitude: -46.6333,
       }),
     ).rejects.toBeInstanceOf(MaxNumberOfCheckinsError)
   })
@@ -70,7 +70,7 @@ describe('Checkin services', () => {
       gymId: 'gym-01',
       userId: 'useid-01',
       userLatitude: -23.5505,
-      userLogitude: -46.6333,
+      userLongitude: -46.6333,
     })
 
     vi.setSystemTime(new Date(2022, 0, 22, 8, 0, 0))
@@ -79,7 +79,7 @@ describe('Checkin services', () => {
       gymId: 'gym-01',
       userId: 'useid-01',
       userLatitude: -23.5505,
-      userLogitude: -46.6333,
+      userLongitude: -46.6333,
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
@@ -100,7 +100,7 @@ describe('Checkin services', () => {
         gymId: 'gym-02',
         userId: 'useid-01',
         userLatitude: -23.5505,
-        userLogitude: -46.6333,
+        userLongitude: -46.6333,
       }),
     ).rejects.toBeInstanceOf(MaxDistanceError)
   })
