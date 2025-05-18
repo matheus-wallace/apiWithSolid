@@ -11,21 +11,19 @@ describe('Authenticate (e2e) ', () => {
     await app.close()
   })
 
-  test('Should be able to get user profile', async () => {
+  test('Should be able to create a gym', async () => {
     const { token } = await createAndAuthenticateUser(app)
 
-    const profileResponse = await request(app.server)
-      .get('/me')
+    const response = await request(app.server)
+      .post('/gyms')
       .set('Authorization', `Bearer ${token}`)
-    expect(profileResponse.statusCode).toBe(200)
-
-    expect(profileResponse.body.user).toEqual(
-      expect.objectContaining({
-        id: expect.any(String),
-        name: 'John Doe',
-        email: 'jhon@gmail.com',
-        created_at: expect.any(String),
-      }),
-    )
+      .send({
+        title: 'Javascripto Gym',
+        description: 'Gym Description',
+        phone: '11999999999',
+        latitude: -23.123456,
+        longitude: -46.123456,
+      })
+    expect(response.statusCode).toBe(201)
   })
 })
