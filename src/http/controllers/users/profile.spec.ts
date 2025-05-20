@@ -22,7 +22,7 @@ describe('Authenticate (e2e) ', () => {
     expect(profileResponse.body.user).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        name: 'John Doe',
+        name: 'Jhon Doe',
         email: 'jhon@gmail.com',
         created_at: expect.any(String),
       }),
